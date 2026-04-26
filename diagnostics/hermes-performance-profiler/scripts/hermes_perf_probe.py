@@ -455,26 +455,26 @@ def markdown_report(data: dict) -> str:
     lines.append("")
     lines.append("| Metric | Value |")
     lines.append("|---|---:|")
-    lines.append(f"| Hermes command | `{{data['hermes_command']}}` |")
-    lines.append(f"| Platform | `{{data['platform']}}` |")
-    lines.append(f"| Python | `{{data['python']}}` |")
-    lines.append(f"| Prompt iterations | {{prompt_summary['count']}} |")
-    lines.append(f"| Help mean | {{format_seconds(help_summary['mean'])}} |")
-    lines.append(f"| Version mean | {{format_seconds(version_summary['mean'])}} |")
-    lines.append(f"| Prompt mean | {{format_seconds(prompt_summary['mean'])}} |")
-    lines.append(f"| Prompt median | {{format_seconds(prompt_summary['median'])}} |")
-    lines.append(f"| Prompt p95 | {{format_seconds(prompt_summary['p95'])}} |")
-    lines.append(f"| Prompt failures | {{prompt_summary['failures']}} |")
-    lines.append(f"| Skill directories | {{skill_scan['skill_directories']}} |")
-    lines.append(f"| SKILL.md files | {{skill_scan['skill_md_files']}} |")
-    lines.append(f"| Skill total files | {{skill_scan['total_files']}} |")
-    lines.append(f"| Skill total size | {{format_bytes(skill_scan['total_bytes'])}} |")
+    lines.append(f"| Hermes command | `{data['hermes_command']}` |")
+    lines.append(f"| Platform | `{data['platform']}` |")
+    lines.append(f"| Python | `{data['python']}` |")
+    lines.append(f"| Prompt iterations | {prompt_summary['count']} |")
+    lines.append(f"| Help mean | {format_seconds(help_summary['mean'])} |")
+    lines.append(f"| Version mean | {format_seconds(version_summary['mean'])} |")
+    lines.append(f"| Prompt mean | {format_seconds(prompt_summary['mean'])} |")
+    lines.append(f"| Prompt median | {format_seconds(prompt_summary['median'])} |")
+    lines.append(f"| Prompt p95 | {format_seconds(prompt_summary['p95'])} |")
+    lines.append(f"| Prompt failures | {prompt_summary['failures']} |")
+    lines.append(f"| Skill directories | {skill_scan['skill_directories']} |")
+    lines.append(f"| SKILL.md files | {skill_scan['skill_md_files']} |")
+    lines.append(f"| Skill total files | {skill_scan['total_files']} |")
+    lines.append(f"| Skill total size | {format_bytes(skill_scan['total_bytes'])} |")
     lines.append("")
 
     lines.append("## Skill Paths Checked")
     lines.append("")
     for path in skill_scan["paths_checked"]:
-        lines.append(f"- `{{path}}`")
+        lines.append(f"- `{path}`")
     lines.append("")
 
     if skill_scan["largest_files"]:
@@ -483,31 +483,31 @@ def markdown_report(data: dict) -> str:
         lines.append("| File | Size |")
         lines.append("|---|---:|")
         for item in skill_scan["largest_files"]:
-            lines.append(f"| `{{item['path']}}` | {{format_bytes(item['bytes'])}} |")
+            lines.append(f"| `{item['path']}` | {format_bytes(item['bytes'])} |")
         lines.append("")
 
     lines.append("## Command Results")
     lines.append("")
 
     for group_name in ["help_results", "version_results", "prompt_results"]:
-        lines.append(f"### {{group_name}}")
+        lines.append(f"### {group_name}")
         lines.append("")
         for result in data[group_name]:
             status = "ok" if result["ok"] else "failed"
             command = " ".join(shlex.quote(part) for part in result["command"])
             lines.append(
-                f"- **{{result['name']}}**: {{status}}, "
-                f"{{result['duration_seconds']:.3f}}s, "
-                f"returncode={{result['returncode']}}, "
-                f"stdout={{result['stdout_bytes']}}B, "
-                f"stderr={{result['stderr_bytes']}}B"
+                f"- **{result['name']}**: {status}, "
+                f"{result['duration_seconds']:.3f}s, "
+                f"returncode={result['returncode']}, "
+                f"stdout={result['stdout_bytes']}B, "
+                f"stderr={result['stderr_bytes']}B"
             )
-            lines.append(f"  - command: `{{command}}`")
+            lines.append(f"  - command: `{command}`")
             if result.get("error"):
-                lines.append(f"  - error: `{{result['error']}}`")
+                lines.append(f"  - error: `{result['error']}`")
             if result.get("stderr_preview"):
                 stderr = result["stderr_preview"].replace("\n", "\\n")
-                lines.append(f"  - stderr preview: `{{stderr}}`")
+                lines.append(f"  - stderr preview: `{stderr}`")
         lines.append("")
 
     lines.append("## Raw JSON")
@@ -558,6 +558,8 @@ def main() -> int:
     args = parser.parse_args()
 
     base_command = split_command(args.hermes_command)
+    if not base_command:
+        parser.error("--hermes-command must not be empty")
 
     executable = base_command[0]
     executable_path = shutil.which(executable) if not os.path.exists(executable) else executable

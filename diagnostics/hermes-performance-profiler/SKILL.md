@@ -14,22 +14,20 @@ metadata:
       - profiling
       - bottleneck-analysis
     related_skills: []
-    requires_tools:
-      - python3
-config:
-  - key: hermes.command
-    description: Hermes-Agent CLI command to benchmark.
-    default: hermes
-    prompt: Hermes-Agent CLI command, for example `hermes`, `hermes-agent`, or a local script path.
-  - key: benchmark.prompt
-    description: Prompt used for measuring end-to-end response latency.
-    default: "Say exactly: benchmark-ok"
-  - key: benchmark.iterations
-    description: Number of repeated benchmark runs.
-    default: "3"
-  - key: benchmark.timeout_seconds
-    description: Timeout in seconds for each benchmark command.
-    default: "120"
+    config:
+      - key: hermes.command
+        description: Hermes-Agent CLI command to benchmark.
+        default: hermes
+        prompt: Hermes-Agent CLI command, for example `hermes`, `hermes-agent`, or a local script path.
+      - key: benchmark.prompt
+        description: Prompt used for measuring end-to-end response latency.
+        default: "Say exactly: benchmark-ok"
+      - key: benchmark.iterations
+        description: Number of repeated benchmark runs.
+        default: "3"
+      - key: benchmark.timeout_seconds
+        description: Timeout in seconds for each benchmark command.
+        default: "120"
 ---
 
 # Hermes Performance Profiler
